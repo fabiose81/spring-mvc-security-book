@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+
+    <head th:replace="header :: header"></head>
+    <div th:replace="home :: home"></div>
+
+    <body>
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div class="container position-container">
+                    <div th:if="${msg}" th:class="${msg.type}">
+                          <p th:text="${msg.message}"/>
+                    </div>
+                    
+                    <form class="form-horizontal" action="#" th:object="${user}" th:action="@{/user}" method="post">
+                        <fieldset>
+                            <legend>User Information</legend>
+                            <div class="form-group">
+                                <label for="inputUsername" class="col-lg-2 control-label">Username</label>
+                                <div class="col-lg-7">
+                                    <input type="text" th:field="*{userName}" required="true" class="form-control" id="inputUsername" maxlength="200" placeholder="Username"/>
+                                </div>
+                            </div>                   
+                            <div class="form-group">
+                                <label for="inputPassword" class="col-lg-2 control-label">Password</label>
+                                <div class="col-lg-7">
+                                    <input type="password" th:field="*{password}" required="true" class="form-control" id="inputUsername" maxlength="200" placeholder="Password"/>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-lg-10 col-lg-offset-2">
+                                    <button type="submit" class="btn btn-primary">Save</button>
+                                </div>
+                            </div>                 
+                        </fieldset>
+                    </form>
+
+                    <br/><br/>
+
+                    <div class="container">    
+                        <fieldset>
+                            <legend>User List</legend>
+                            <table class="table table-striped">
+                                <tbody>
+                                    <tr th:each="user : ${users}">
+                                        <td th:text="${user.userName}"></td>  
+                                        <td>
+                                            <a type="button" class="btn btn-danger" th:href="${'/user/delete/' + user.id}">
+                                                <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </fieldset>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

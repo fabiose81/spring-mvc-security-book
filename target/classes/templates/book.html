@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+
+    <head th:replace="header :: header"></head>
+    <div th:replace="home :: home"></div>
+
+    <body>
+        <div class="panel panel-default">
+            <div class="panel-body">
+                 <div class="container position-container">
+                    <div th:if="${msg}" th:class="${msg.type}">
+                          <p th:text="${msg.message}"/>
+                    </div>
+                     
+                    <form class="form-horizontal" action="#" th:object="${book}" th:action="@{/book}" method="post">
+                        <fieldset>
+                            <legend>Book Information</legend>
+                            <div class="form-group">
+                                <label for="text" class="col-lg-2 control-label">Book's Title</label>
+                                <div class="col-lg-7">
+                                    <input type="text" th:field="*{title}" required="true" class="form-control" id="inputTitle" maxlength="200" placeholder="Title"/>
+                                </div>
+                            </div>                   
+                            <div class="form-group">
+                                <label for="textArea" class="col-lg-2 control-label">Book's Description</label>
+                                <div class="col-lg-7">
+                                    <textarea class="form-control text-area-resize-none" th:field="*{description}" required="true" rows="3" maxlength="1000"  id="inputDescription" placeholder="Description"></textarea>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-lg-10 col-lg-offset-2">
+                                    <button type="submit" class="btn btn-primary">Save</button>
+                                </div>
+                            </div>                 
+                        </fieldset>
+                    </form>
+
+                    <br/><br/>
+
+                    <div class="container">    
+                        <fieldset>
+                            <legend>Book List</legend>
+                            <table class="table table-striped">
+                                <tbody>
+                                    <tr th:each="book : ${books}">
+                                        <td th:text="${book.title}"></td>                                    
+                                        <td>
+                                            <button type="button" class="btn btn-default view-book" data-toggle="modal" 
+                                                    data-target="#myModalView"
+                                                    th:attr="data-book=${book.id} + ',' + ${book.title} + ',' +${book.description}">
+                                                <span class="glyphicon glyphicon glyphicon-search" aria-hidden="true"></span>
+                                            </button>
+                                        </td>
+                                        <td>
+                                            <button type="button" class="btn btn-primary edit-book" data-toggle="modal" 
+                                                    data-target="#myModalEdit"
+                                                    th:attr="data-book=${book.id} + ',' + ${book.title} + ',' +${book.description}">
+                                                <span class="glyphicon glyphicon glyphicon-pencil" aria-hidden="true"></span>
+                                            </button>
+                                        </td>
+                                        <td>
+                                            <a type="button" class="btn btn-danger" th:href="${'/book/delete/' + book.id}">
+                                                <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </fieldset>
+                    </div>
+
+                    <!-- Modal View -->
+                    <div class="modal fade" id="myModalView" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <input type="hidden" id="view-book-id" name="id"/>
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                    <h4 class="modal-title" id="myModalLabel">Book Detail</h4>
+                                </div>
+                                <div class="modal-body">
+                                    <form class="form-horizontal">
+                                        <div class="form-group">
+                                            <label for="text" class="col-lg-2 control-label">Title</label>
+                                            <div class="col-lg-7">
+                                                <input type="text"  class="form-control" readOnly="true" id="view-book-title" name="title"/>
+                                            </div>
+                                        </div>  
+                                        <div class="form-group">
+                                            <label for="text" class="col-lg-2 control-label">Description</label>
+                                            <div class="col-lg-7">
+                                                <textarea class="form-control text-area-resize-none" readOnly="true" id="view-book-description" name="description"/>
+                                            </div>
+                                        </div> 
+                                    </form> 
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Modal Edit -->
+                    <div class="modal fade" id="myModalEdit" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">                        
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                    <h4 class="modal-title" id="myModalLabel">Book Detail</h4>
+                                </div>
+                                <form class="form-horizontal" action="#" th:object="${book}" th:action="@{/book}" method="post">
+                                    <input type="hidden" id="edit-book-id" name="id" th:value="*{id}"/>
+                                    <div class="modal-body">
+                                        <div class="form-group">
+                                            <label for="text" class="col-lg-2 control-label">Title</label>
+                                            <div class="col-lg-7">
+                                                <input type="text" class="form-control" required="true" id="edit-book-title" maxlength="200" th:field="*{title}" name="title"/>
+                                            </div>
+                                        </div>  
+                                        <div class="form-group">
+                                            <label for="text" class="col-lg-2 control-label">Description</label>
+                                            <div class="col-lg-7">
+                                                <textarea  class="form-control text-area-resize-none" required="true" maxlength="1000"  id="edit-book-description" th:field="*{description}" name="description"/>
+                                            </div>
+                                        </div> 
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                        <button type="submit" class="btn btn-primary">Save</button>
+                                    </div>
+                                </form> 
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+
+    <head th:replace="header :: header"></head>
+    
+     <div class="navbar navbar-default navbar-fixed-top" th:fragment="home">
+        <div class="container">
+            <div class="navbar-header">
+                <h4 th:inline="text">Hello [[${#httpServletRequest.remoteUser}]]!</h4>                   
+            </div>
+            <div class="navbar-collapse collapse" id="navbar-main">
+                <ul class="nav navbar-nav">
+                    <li th:if="${adminAuthority}">
+                        <a th:href="@{/user}">User</a>
+                    </li>  
+                    <li>
+                        <a th:href="@{/book}">Book</a>
+                    </li>          
+                </ul>
+                <ul class="nav navbar-nav navbar-right">    
+                    <li>
+                        <form class="form-horizontal" th:action="@{/logout}" method="post">
+                            <button type="submit" class="btn btn-primary btn-xs">Sign Out</button>           
+                        </form>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>                      
+</html>
